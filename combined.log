@@ -4,3 +4,9 @@
 {"level":"info","message":"User logged in: test@yopmail.com","timestamp":"2025-04-15T13:25:33.143Z"}
 {"level":"info","message":"User logged in: test@yopmail.com","timestamp":"2025-04-15T13:25:43.821Z"}
 {"level":"info","message":"User logged in: test@yopmail.com","timestamp":"2025-04-15T13:25:52.443Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-04-16T05:58:44.619Z"}
+{"level":"info","message":"User logged in: admin@yopmail.com","timestamp":"2025-04-16T05:58:56.798Z"}
+{"level":"info","message":"Profile updated: admin@yopmail.com","timestamp":"2025-04-16T05:59:47.975Z"}
+{"level":"info","message":"Product created: Cola","timestamp":"2025-04-16T06:00:58.867Z"}
+{"level":"info","message":"Product updated: undefined","timestamp":"2025-04-16T06:02:48.567Z"}
+{"level":"info","message":"User registered: test2@yopmail.com","timestamp":"2025-04-16T06:03:53.306Z"}

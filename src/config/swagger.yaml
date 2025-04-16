@@ -1,0 +1,192 @@
+openapi: 3.0.0
+info:
+  title: FMCG App API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, minLength: 6 }
+                name: { type: string }
+                role: { type: string, enum: [user, admin] }
+              required: [email, password, name]
+      responses:
+        '201': { description: User created, returns token }
+        '400': { description: Bad request }
+  /auth/login:
+    post:
+      summary: Log in and get token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string, format: email }
+                password: { type: string }
+              required: [email, password]
+      responses:
+        '200': { description: Token returned }
+        '401': { description: Unauthorized }
+  /users/me:
+    get:
+      summary: Get current user profile
+      security:
+        - BearerAuth: []
+      responses:
+        '200': { description: User profile }
+        '401': { description: Unauthorized }
+    put:
+      summary: Update current user profile (name, password)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                password: { type: string, minLength: 6 }
+      responses:
+        '200': { description: Updated user profile }
+        '400': { description: Bad request }
+        '401': { description: Unauthorized }
+    delete:
+      summary: Delete current user
+      security:
+        - BearerAuth: []
+      responses:
+        '200': { description: User deleted }
+        '401': { description: Unauthorized }
+  /users:
+    get:
+      summary: List all users (admin only)
+      security:
+        - BearerAuth: []
+      responses:
+        '200': { description: List of users }
+        '403': { description: Forbidden }
+        '401': { description: Unauthorized }
+  /products:
+    get:
+      summary: List products with filters and pagination
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema: { type: integer, default: 1 }
+        - in: query
+          name: limit
+          schema: { type: integer, default: 10 }
+        - in: query
+          name: category
+          schema: { type: string }
+        - in: query
+          name: priceMin
+          schema: { type: number }
+        - in: query
+          name: priceMax
+          schema: { type: number }
+        - in: query
+          name: name
+          schema: { type: string }
+      responses:
+        '200': { description: Paginated products }
+        '401': { description: Unauthorized }
+    post:
+      summary: Create a new product (admin only)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                category: { type: string }
+                price: { type: number }
+                stock: { type: number }
+                description: { type: string }
+              required: [name, category, price, stock]
+      responses:
+        '201': { description: Product created }
+        '400': { description: Bad request }
+        '403': { description: Forbidden }
+        '401': { description: Unauthorized }
+  /products/{id}:
+    get:
+      summary: Get product by ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Product details }
+        '404': { description: Product not found }
+        '401': { description: Unauthorized }
+    put:
+      summary: Update product by ID (admin only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                category: { type: string }
+                price: { type: number }
+                stock: { type: number }
+                description: { type: string }
+      responses:
+        '200': { description: Updated product }
+        '400': { description: Bad request }
+        '404': { description: Product not found }
+        '403': { description: Forbidden }
+        '401': { description: Unauthorized }
+    delete:
+      summary: Delete product by ID (admin only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Product deleted }
+        '404': { description: Product not found }
+        '403': { description: Forbidden }
+        '401': { description: Unauthorized }
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
